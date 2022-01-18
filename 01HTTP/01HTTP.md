@@ -80,3 +80,45 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 		![telnet-1](telnet-1.png)
 
 	* Wireshark
+
+## 05 网络为什么要分层： OSI 模型与 TCP IP 模型
+
+* OSI (Open System Interconnection Reference Model) 概念模型
+
+	![osi-1](osi-1.png)
+
+	7. Application
+		* 解决业务问题
+	6. Presentation
+		* 把网络中的消息，转换成应用层可以读取的格式 (TSL, SSL)
+	5. Session (上下层都有延申的这里，只是个概念)
+		* 建立会话，握手，维持连接关系
+	4. Transport
+		* 进程与进程之间的通信
+			* 报文发到主机上，主机因该把报文分发给哪一个进程，由传输层来决定
+		* 保证报文的可达性 (TCP)
+		* 流量的控制 (TCP)
+		* 负载均衡
+	3. Network
+		* 在广域网中，可以从一个主机上把报文发送到另外一个主机上 (IP)
+	2. Data Link
+		* 在局域网中，使用 MAC 地址连接到响应的交换机或者路由器
+		* 二层设备
+	1. Physical
+		* 物理介质
+
+* OSI 模型与 TCP/IP 模型对照
+
+	![osiVsTcpIp-1](osiVsTcpIp-1.png)
+
+	* 和并了 7，6，5 层
+	* 合并了 2，1 层
+
+* 分层的好处
+	* 封装
+* 分层的坏处
+	* 数据延迟，路径远
+	* Inter 的 DBDK 可以绕过分层，但层内细节就没了
+* 报文头部 6:42
+
+	![headers-1](headers-1.png)
