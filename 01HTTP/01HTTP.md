@@ -87,6 +87,7 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 
 	![osi-1](osi-1.png)
 
+	```
 	7. Application
 		* 解决业务问题
 	6. Presentation
@@ -104,8 +105,9 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 	2. Data Link
 		* 在局域网中，使用 MAC 地址连接到响应的交换机或者路由器
 		* 二层设备
-	1. Physical
+	1. Physical 
 		* 物理介质
+	```
 
 * OSI 模型与 TCP/IP 模型对照
 
@@ -122,3 +124,40 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 * 报文头部 6:42
 
 	![headers-1](headers-1.png)
+
+	![headers-2](headers-2.png)
+
+	* 这里的 Frame 不是数据链路层的 (Data Link: Ethernet) frame, 这里是 wireshark 自己定义的信息
+	* Ethernet 2: 数据链路层 (MAC 地址)
+	* IP 层
+	* TCP 层
+	* TLS 层会被加密
+	* HTTP 2.0
+
+## 06 HTTP 解决了什么问题？
+
+* Form Follows Function: HTTP 协议为什么是现在这个样子？
+	* HTTP 协议
+		* Roy Thomas Fielding: HTTP 主要作者， REST 架构作者
+	* URI: 统一资源标识符
+
+		![uri-1](uri-1.png)
+
+* HTTP 解决了什么问题？
+	* Web's major goal was to be a shared information space through which ***people*** and ***machines*** could communicate. --Tim Berners Lee
+	* 解决 WWW 信息交互必须面对的需求
+		* 低门槛
+		* 可扩展性
+			* 巨大的用户群体，超长的寿命
+		* 分布式系统下的 Hypermedia
+			* 大粒度数据的网络传续
+		* Internet 规模
+			* 无法控制 scalability
+				* 不可预测的负、非法格式的数据、恶意信息
+				* 客户端不能保持所有服务器信息，服务器不能保持多个请求间的状态信息
+			* 独立的组件部署：新老组件并存
+		* 向前兼容： 自 1993 年起 HTTP0.9\1.0 （1996） 已经被广泛使用
+
+## 07 评估 Web 架构的七大关键属性
+
+* 
