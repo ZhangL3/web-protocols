@@ -299,5 +299,64 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 	* Brokered Distributed  Objects, BDO
 		引入名字解析组件来简化 DO，例如 DORBA
 	
-
 ![StylesEvo-1](StylesEvo-1.png)
+
+## 09 如何用 Chrome 的 Network 面板分析 HTTP 报文
+
+* Chrome 抓包：快速定位 HTTP 协议问题
+	* 过滤器 (空格实现 AND 选择)
+		* domain:
+		* has-response-header:
+		* is:
+			* is: running
+			* is: from-cache
+		* larger-than:
+		* method:
+			* GET, POST, ...
+		* mime-type
+		* scheme:
+			* HTTP | HTTPS
+		* set-cookie-domain:
+		* set-cookie-name:
+		* set-cookie-value:
+		* status-code:
+		* ...
+	* 请求列表
+		* Name
+		* Status
+		* Type
+		* initiator:
+			* Parser
+			* Redirect
+			* Script
+			* Other
+				* 点击
+		* Size
+		* Time
+		* Waterfall: 分析图
+	* 预览请求内容
+		* 浏览器加载使时间
+		* 查看请求上下游:
+			* Shift 悬停请求上，绿色是上游，红色是下游
+* 浏览器加载时间
+	* 触发流程：
+		* 解析 HTML 结构
+		* 加载外部脚本和样式表文件
+		* 解析并执行脚本代码 // 部分脚本会阻塞页面的加载
+		* DOM 树构建完成 // DOMContentLoaded 事件
+		* 加载图片等外部文件 // load 事件
+	* 请求时间详细分布
+		* Queueing: 浏览器在一下情况对请求排队
+			* 存在更高优先级的请求
+			* 此源已经带开了六个 TCP 连接，达到限值，仅适用于 HTTP/1.0 和 HTTP/1.1
+			* 浏览器正在短暂分配磁盘缓存中的空间
+		* Stalled: 请求可能会因为 Queueing 描述的任何原因而停止
+		* DNS Lookup: 浏览器正在解析请求的 IP 地址
+		* Proxy Negotiation: 浏览器正在与代理服务器协商请求
+		* Request sent: 正在发送请求
+		* ServiceWorker Preparation: 浏览器正在启动 Service Worker (负责网络的进程)
+		* Request to ServiceWorker: 正在将请求发送到 Service Worker
+		* Waiting (TTFB): 浏览器正在等待响应的第一个字节。 TTFB 表示 Time To First Byte。此时间包括 1 次往返延迟时间及服务器转杯响应所用的时间
+		* Content Download: 浏览器正在接收响应
+		* Receiving Push: 浏览器正在通过 HTTP/2 服务器推送接收此响应的数据
+		* Reading Push: 浏览器正在读取之前收到的本地数据
