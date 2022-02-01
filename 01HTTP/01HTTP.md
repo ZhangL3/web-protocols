@@ -360,3 +360,34 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 		* Content Download: 浏览器正在接收响应
 		* Receiving Push: 浏览器正在通过 HTTP/2 服务器推送接收此响应的数据
 		* Reading Push: 浏览器正在读取之前收到的本地数据
+
+## 10 URI 的基本格式以及 URL 的区别
+
+* 什么是 URI
+	* URL: Uniform Resource Locator, 表示资源的位置，期望提供资源的查找方法
+	* URN: Uniform Resource Name, 期望为支援提供持久的、位置无关的表示方式，并允许检点的将多个命名空间映射到单个 URN 命名空间
+	* URI: Uniform Resource Identifier, 用以区分资源，是 URL 和 URN 的超集，用于取代 URL 和 URN 的概念
+* URI 的组成
+	* schema
+	* user information
+	* host
+	* port
+		* 默认是 80 端口
+		* https 默认是 43 端口
+	* path
+	* query
+	* fragment
+
+	![uri-2](uri-2.png)
+
+* URI 格式
+
+	![uri_format-1](uri_format-1.png)
+
+	![uri_format-2](uri_format-2.png)
+
+	![uri_format-3](uri_format-3.png)
+
+* 相对 URI
+
+	![uri_relative-1](uri_relative-1.png)
