@@ -391,3 +391,41 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 * 相对 URI
 
 	![uri_relative-1](uri_relative-1.png)
+
+## 11 为什么要对 URI 进行编码？
+
+* 传递数据中，如果存在用作分隔符的保留字符怎么办？
+* 对可能产生歧义性的数据编码
+	* 不在 ASCII 码范围内的字符
+	* ASCII 码种不可显示的的字符
+	* URI 中规定的保留字符
+	* 不安全字符 (传输环节可能会被不正当处理)，如空格、引号、尖括号等
+* 示例
+	* https://www.baidu.com/s?wd=?#!
+	* https://www.baidu.com/s?wd=极客 时间
+	* https://www.baidu.com/s?wd=极客 '>时间
+* 保留字符与非保留字符
+
+	![UriCoding-1](UriCoding-1.png)
+
+* URI 百分号编码
+
+	![UriCoding-2](UriCoding-2.png)
+
+## 12 详解 HTTP 的请求行
+
+* 请求行 (一)
+	* request-line = method SP request-target SP HTTP-version CRLF
+
+		![requestLine-1](requestLine-1.png)
+
+		* method 方法: 指明操作目的，动词
+		* request-target = origin-form / absolute-form / authority-form / asterisk-form
+			* origin-form = absolute-path ["?" query]
+				* 向 origin server 发起的请求，path 为空时必须传递 /
+			* absolute-form = absolute-URI
+				* 仅用于向正向代理 proxy 发起请求时，详见正向代理与隧道
+			* authority-form = authority
+				* 仅用于 CONNECT 方法，例如 CONNECT www.example.com:80 HTTP/1.1
+			* asterisk-form = "*"
+				* 仅用于 OPTIONS 方法
