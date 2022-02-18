@@ -420,12 +420,60 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 		![requestLine-1](requestLine-1.png)
 
 		* method 方法: 指明操作目的，动词
-		* request-target = origin-form / absolute-form / authority-form / asterisk-form
-			* origin-form = absolute-path ["?" query]
-				* 向 origin server 发起的请求，path 为空时必须传递 /
-			* absolute-form = absolute-URI
-				* 仅用于向正向代理 proxy 发起请求时，详见正向代理与隧道
-			* authority-form = authority
-				* 仅用于 CONNECT 方法，例如 CONNECT www.example.com:80 HTTP/1.1
-			* asterisk-form = "*"
-				* 仅用于 OPTIONS 方法
+* 请求行（二）
+	* request-target = origin-form / absolute-form / authority-form / asterisk-form (四种格式)
+		* origin-form = absolute-path ["?" query] (向产生内容的服务器发起请求)
+			* 向 origin server 发起的请求，path 为空时必须传递 /
+		* absolute-form = absolute-URI
+			* 仅用于向正向代理 proxy 发起请求时，详见正向代理与隧道
+		* authority-form = authority
+			* 仅用于 CONNECT 方法，例如 CONNECT www.example.com:80 HTTP/1.1
+		* asterisk-form = "*"
+			* 仅用于 OPTIONS 方法
+* 常用方法 (RFC7231)
+	* GET
+	* HEAD
+	* POST
+	* PUT: 更新资源，带条件时时幂等方法
+	* DELETE
+	* CONNECT: 建立 tunnel 隧道
+	* OPTIONS: 显示服务器对访问资源支持的方法, 幂
+
+		![methodOptions](methodOptions.png)
+
+	* TRACE: 回显服务器收到的请求，用于定位问题，又安全风险
+		* 从 nginx 0.5.17 (2007) 开始返回 405
+* 用于文档管理的 WEBDEV 方法 （RFC2518）：
+	* 作用
+		* 有助于 Restfull API
+		* 多人协作文件管理
+	* PROPFIND: 从 Web 资源中检索以 XML 格式储存的属性。它也被重载，以允许一个检索远程系统的集合结构（也叫目录层次结构）
+	* PROPPATCH： 在单个原子性动作中更改和删除资源的多个属性
+	* MKCOL: 创建集合或者目录
+	* COPY： 将资源从一个 URI 复制到另一个 URI
+	* MOVE： 将资源从一个 URI 移动到另一个 URI
+	* LOCK: 锁定一个资源。 WebDAV 支持共享锁和互斥锁
+	* UNLOCK: 解除资源的锁定
+	* WEBDAV 实验
+		* 环境
+			* 服务器
+				* Nginx
+				* http_dav_module 模块
+				* nginx-dav-ext-module 模块
+			* 客户端
+				* winscp
+		* 过程
+			* 创建 Wireshark 捕获
+
+				![webdev_protocol-1](webdev_protocol-1.png)
+
+			* 用客户端连接服务器
+
+				![webdev_protocol-2](webdev_protocol-2.png)
+
+			* 在客户端中修改服务器上的文件
+			* 分析抓取的报文
+
+				![webdev_protocol-3](webdev_protocol-3.png)
+
+## 13 HTTP 的正确响应码
