@@ -477,3 +477,80 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 				![webdev_protocol-3](webdev_protocol-3.png)
 
 ## 13 HTTP 的正确响应码
+
+* 响应行
+
+	![response-1](response-1.png)
+
+* 响应码
+	* 1xx：请求已接收到，需要金鱼不处理才能完成，HTTP1.0 不支持
+		* 100 Continue: 上传大文件前使用
+			* 由客户端还请请求中携带 Expect: 100-continue 头部触发
+
+				![response-2](response-2.png)
+
+		* 101 Switch Protocols: 协议升级使用
+			* 由客户端发起请求中携带 Upgrade: 头部触发，如升级 websocket 或者 http/2.0
+		* 102 Processing: WebDEV 请求可能包含许多涉及文件操作的子请求，需要很长时间才能完成请求。该代码表似服务器已经收到并正在处理请求，但无响应可用。这样可以防止客户端超时，并假设请求丢失。
+	* 2xx: 成功和处理请求
+		* 200 OK: 成功返回响应。
+		* 201 Created: 由新资源在服务器端被成功创建 
+		* 202 Accepted: 服务器接收并开始处理请求，但请求未处理完成。这样以一个模糊的概念是有意如此设计，可以覆盖更多的场景。例如异步，需要长时间处理的任务
+		* 203 Non-Authoritative Information: 当代理服务器修改了 origin server 的原始响应包体时（例如更换了 HTML 中的元素值），代理服务器可以通过修改 200 为 203 的方式告诉客户端这一事实，方便客户端为这一行为做出响应的处理。203 响应可以被缓存。203 其实并不被广为接收
+		* 204 No Content: 成功执行了请求且不携带响应胞体，并暗示客户端无需更新当前的页面视图。常见于用 PUT，POST 上传了一些资源，但是返回响应不需要刷新
+		* 205 Reset Content: 成功执行了请求且不携带响应胞体，同时指明客户端需要更新当前页面
+		* 206 Partial Content: 使用 range 协议时返回部分响应内容时的响应码。用于多线程断链续传下载
+		* 207 Multi-Status: 在 WEBDEV 协议中以 XML 返回多个资源状态。比如请求一个目录，总体是 207，但子目录有自己的返回码
+		* 208 Already Reported: 为避免相同集合下资源在 207 响应码下重复上报，使用 208 可以使用父集合的响应码
+	* 3xx: 重定向使用 Location 指向的资源或者缓存中的资源。在 RFC2068 中规定客户端重定向次数不能超过 5 次，以防止死循环。
+		* 300 Multiple Choices: 资源有错中表述，通过 300 返回给客户端后由其自行选择访问哪一种表述。由于缺乏明确的细节，300 很少使用。
+		* 301 Moved Permanently: 资源永久性的重定向到另一个 URI 中。
+		* 302 Found: 资源临时的重定向到另一个 URI 中
+		* 303 See Other: 重定向到其他资源，常用于 PoST/PUT 等方法的响应中
+		* 304 Not Modified: 当客户端拥有可能过的的缓存时，会携带缓存的标识 etag、时间等信息询问服务器缓存是否仍可复用，而 304 时告诉客户端可以复用缓存
+		* 307 Temporary Redirect: 类似 302，但明确重定向后请求方法必须于原请求方法相同，不得改变
+		308 Permanent Redirect: 类似 301，但明确重定向后请求方法必须与原请求方法相同，不得改变
+
+## 14 HTTP 的错误响应码
+
+* 响应码
+	* 4xx: 客户端出现错误
+		* 400 Bad Request: 服务器认为客户端出现了错误，但不能明确判断以下哪种错误时使用次错误码。例如 HTTP 请求格式错误。
+		* 401 Unauthorized: 用户认证信息确实或者不正确，导致服务器无法处理请求
+		* 407 Proxy Authentication Required: 对需要经由代理的请求，认证信息为通过代理服务器的验证
+		* 403 Forbidden: 服务器理解请求的含义，但没有权限执行此请求
+			* 常见于搭建了服务器，但对某个目录下的文件没有访问权限
+		* 404 Not Found: 服务器没有找到对应的资源
+		* 410 Gone: 服务器没有找到对应的资源，且明确的知道该位置永久性找不到该资源, 很少使用
+		* 405 Method Not Allowed: 服务器不支持请求行中的 method 方法
+
+			![response-error-1](response-error-1.png)
+
+		* 406 Not Acceptable: 对客户端指定的资源描述不存在（例如对语言或者编码由要求），服务器返回表述别表供客户端选择
+		* 408 Request Timeout: 服务器请求超时
+		* 409 Conflict: 资源冲突，例如上传文件时目标位置已经存在版本更新的资源
+		* 411 Length Request: 如果请求含有包体且未携带 Content-Length 头部，且不属于 chunk 类请求时，返回 411
+		* 412 Precondition Failed: 复用缓存时传递的 If-Unmodified-Since 或 If-None-Match 头部不满足
+		* 413 Payload Too Large/Request Entity Too Large: 请求的胞体超出服务器能处理的最大长度
+		* 414 URI Too Long
+		* 415 Unsupported Media Type: MIME 类型不被支持
+		* 416 Range Not Satisfiable: 无法提供 Range 请求中指定的那段包体
+		* 417 Expectation Failed: 对于 Expect 请求头部期待的情况无法满足时的响应码
+		* 421 Misdirected Request
+		* 426 Upgrade Required
+		* 428 Precondition Required
+		* 429 Too Many Requests: 客户端发送请求的速度过快
+		* 431 Request Header Fields Too Large: 通常返回 414
+		* 451 Unavailable for legal Reasons
+	* 5xx: 服务器端出现的错误
+		* 500 Internal Server Error
+		* 501 Not Implemented
+		* 502 Bad Gateway: 代理服务器无法获取到合法响应
+		* 503 Service Unavailable: 服务器资源尚未准备好处理当前请求
+		* 504 Gateway Timeout: 代理服务器无法及时的从上游获得响应
+		* 505 HTTP Version Not Supported
+		* 507 Insufficient Storage: 服务器没有足够的空间处理请求
+		* 508 Loop Detected: 访问资源时检测到循环
+		* 511 Network Authentication Required: 代理服务器发现客户端需要进行身份验证才能获得网络访问权限  
+
+
