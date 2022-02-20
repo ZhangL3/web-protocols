@@ -552,5 +552,5 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 		* 507 Insufficient Storage: 服务器没有足够的空间处理请求
 		* 508 Loop Detected: 访问资源时检测到循环
 		* 511 Network Authentication Required: 代理服务器发现客户端需要进行身份验证才能获得网络访问权限  
-
+	* 客户端不认识的返回码会被当做 x00 来处理
 
