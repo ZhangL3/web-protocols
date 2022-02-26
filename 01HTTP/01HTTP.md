@@ -554,3 +554,56 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 		* 511 Network Authentication Required: 代理服务器发现客户端需要进行身份验证才能获得网络访问权限  
 	* 客户端不认识的返回码会被当做 x00 来处理
 
+## 15 如何管理跨代理服务器的长短连接
+
+* HTTP 连接的常见流程 (短链接)
+
+	![httpShortConnection](httpShortConnection.png)
+
+* 从 TCP 编程上看 HTTP 请求处理
+
+	![httpConnectionInTcpView](httpConnectionInTcpView.png)
+
+* 短连接与长连接
+	* 事务: 一次请求和响应的合称
+	* 短链接 vs 长连接
+
+		![shotConnectionVsLongConnection](shotConnectionVsLongConnection.png)
+
+		* 老的服务器不支持长连接
+	* 长短连接由 Connection 头部决定
+		* Keep-Alive: 长连接
+			* 客户端请求长连接
+				* Connection: Keep-Alive
+			* 服务器表示支持长连接
+				* Connection: Keep-Alive
+			* 客户端复用连接
+			* HTTP/1.1 默认支持长连接
+				* Connection: Keep-Alive 无意义
+				* Connection: Close 短连接
+		* 对代理服务器的要求
+			* 不转发 Connection 列出的头部，该头部仅与当前连接相关
+* Connection 仅针对当前连接有效
+	* user agent 与 origin server 间有层层 proxy 代理
+
+		![connectionThroughProxy](connectionThroughProxy.png)
+
+		* 虽然客户端要求长连接，但服务器可以表示不支持，只能短连接
+* 代理服务器对长连接的支持
+	* 代理服务器过去陈旧，不支持长连接，也不认识 Connection 头部，会原方转发，此时客户端和原服务器都以为与代理服务器是长连接，但代理服务器只支持短连接
+
+		![oldServerLongConnection](oldServerLongConnection.png)
+
+	* 解决方法 Proxy-Connection 头部
+
+		* 浏览器还不知道要连接代理服务器，没有 proxyConnection 头部
+  
+		![proxyConnection-1](proxyConnection-1.png)
+
+		* 打开代理服务
+
+		![proxyConnection-2](proxyConnection-2.png)
+
+		* 替换为 proxyConnection
+
+		![proxyConnection-3](proxyConnection-3.png)
