@@ -607,3 +607,12 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 		* 替换为 proxyConnection
 
 		![proxyConnection-3](proxyConnection-3.png)
+
+## 16 HTTP 消息在服务端的路由
+
+* Host 头部
+	* Host = uri-host[":"port]
+	* 必须且唯一且合法，否则返回 400
+* Host 头部与信息的路由
+
+	![16-1](16-1.jpg)
