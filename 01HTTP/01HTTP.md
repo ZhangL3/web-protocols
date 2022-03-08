@@ -616,3 +616,49 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 * Host 头部与信息的路由
 
 	![16-1](16-1.jpg)
+
+## 17 代理服务器转发信息时的相关头部
+
+* 问题：如果传递 IP 地址
+
+		![17-1](17-1.png)
+
+* 消息的转发
+	* Max-Forwards 头部
+		* 限制转发次数
+	* Via 头部
+		* 经过的代理服务器的名称和版本
+
+			![17-2](17-2.png)
+
+	* Cache-Control:no-transform
+		* 进制代理服务器修改响应的包体
+
+## 18 请求与响应的上下文
+
+* 上下文
+	* 请求从哪里来，或者请求或响应希望对后序的响应和请求有哪些影响
+* 请求的上下文: User-Agent
+	* 指明客户端的类型信息，服务器可以依据此对资源的表述做抉择
+
+		![18-1](18-1.png)
+
+* 请求的上下文: Referer
+	* 浏览器对来自某一页面的请求自动添加的头部
+
+		![18-2](18-2.png)
+
+		![18-3](18-3.png)
+
+* 请求的上下文: From
+	* From = mailbox
+* 响应的上下文: Server
+	* 指明服务器上所有软件的信息，用于帮助客户端定位问题或者统计数据
+	* 例如：
+		* Server: nginx
+		* Server: openresty/1.13.6
+* 响应的上下文: Allow 与 Accept-Ranges
+	* Allow: 告诉客户端，服务器上该 URI 对应的资源允许哪些方法的执行
+	* Accept-Ranges: 告诉客户端服务器上该资源是否允许 range 请求
+
+	
