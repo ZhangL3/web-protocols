@@ -626,3 +626,56 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 	- Max-Forwards 头部：最多代理数
 	- Via 头部：经过了哪些代理服务器
 	- Cache-Control:no-transform: 禁止代理服务器修改相应包体
+
+## 18 请求与响应的上下文
+
+- 上下文
+	- 请求从哪里来
+	- 想对后续的请求和相应产生哪些影响
+- 请求的上下文
+	- User-Agent:
+		- 指明客户端的类型信息
+	- Referer
+		- 浏览器对来自某一页面的请求自动添加的头部
+			- 比如从谷歌搜索转过来的请求
+			- 比如 css 和 js 由某个请求发出
+		- 用于统计分析、缓存优化、防盗链等功能
+	- FROM
+		- 用于网络爬虫
+- 相应的上下文
+	- Server
+		- 服务器用的软件的信息
+	- Allow
+		- 只允许使用哪些方法
+	- Accept-Ranges
+		- 告诉客户端，服务器上该资源是否允许 range 请求
+
+## 19 内容协商与资源表述
+
+- 同一个 URL 可以得到不同的资源，具体内容需要协商
+	![19-1](19-1.png)
+- 内容协商的两种方式
+	- Proactive 主动式内容协商
+		- 客户端先表明需要的表述方式
+
+			![19-2](19-2.png)
+
+	- Reactive 响应式内容协商
+		- 多种表示方式都发给客户端，再由客户端发请求
+
+			![19-2](19-2.png)
+
+		- 标准不统一，很少用
+- 常见的协商要素
+	- 质量因子 q：内容的质量、可接受类型的优先级
+	- 媒体资源的 MIME 类型及质量因子
+	- 字符编码
+	- 内容编码
+		- Accept-Encoding: gzip, deflate, br
+	- 表示语言
+	- internationalization (i18n)
+	- localization (l10n)
+- 资源表述的元数据头部
+	- content-type
+	- content-encoding
+	- Content-Language
