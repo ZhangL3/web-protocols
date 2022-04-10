@@ -613,6 +613,8 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 * Host 头部
 	* Host = uri-host[":"port]
 	* 必须且唯一且合法，否则返回 400
-* Host 头部与信息的路由
+* Host 头部与信息的路由 (NGINX 为例)
 
 	![16-1](16-1.jpg)
+
+## 17 代理服务器转发消息时的头部
