@@ -618,3 +618,11 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 	![16-1](16-1.jpg)
 
 ## 17 代理服务器转发消息时的头部
+
+- X-Forwarded-For
+ 
+	![17-1](17-1.png)
+
+	- Max-Forwards 头部：最多代理数
+	- Via 头部：经过了哪些代理服务器
+	- Cache-Control:no-transform: 禁止代理服务器修改相应包体
