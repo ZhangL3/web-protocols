@@ -679,3 +679,49 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 	- content-type
 	- content-encoding
 	- Content-Language
+
+## 20 HTTP 包体的传输方式（1）：定长包体
+
+- HTTP 包体：承载的信息内容
+	- 请求或者响应都可以携带包体
+- 以下消息不能含有包体
+	- HEAD 方法请求对应的响应
+	- 1xx, 204, 304 对应的响应
+	- CONNECT 方法对应的 2xx 响应
+- 两种传输 HTTP 包体的方式（一）
+	- Content-Length 明确指明包体长度
+		- Content-Length = 1*DIGIT
+		- 10 进制 (字符)
+		- 长度一定要一致
+			- 如果短于实际, 浏览器只收给定的长度
+			- 如果长于实际, 浏览器无法解析
+		- 优点：接收端处理简单
+
+## 21 HTTP 包体的传输方式（2）：不定长包体
+
+- 发送 HTTP 消息是不能确定包体的全部长度
+	- 使用 Transfer-Encoding 头部指明使用 Chunk 传输方式
+		- 含 Transfer-Encoding 头部后 Content-Length 头部应被忽略
+	- 优点
+		- 基于长连接持续推送动态内容
+		- 压缩体积比较大的包体时，不必完全压缩完（计算出头部）再发送，可以边发送边压缩
+		- 传递必须再包体传输完才能计算出 Trailer 头部
+- 不定长包体的 chunk 传输方式	
+	- Transfer-Encoding 头部
+		- transfer-coding="chunked"/...
+		- Chunked transfer encoding 分块传输编码：Transfer-Encoding: chunked
+
+			![21-1](21-1.png)
+	
+	- Trailer 头部的传输
+		- 客户端必须支持
+			- TE: trailers
+	- Trailer 头部： 服务器告知接下来 chunk 胞体后会传输哪些 Trailer 头部
+		- Trailer: Date
+	- 以下头部不允许出现在 Trailer 的值中：
+		- ...
+	- 很多浏览器不支持
+- MIME
+	- MIME (Multipurpose Internet Mail Extensions)
+- Content-Disposition
+	- disposition-type = "inline" (行内显示) | "attachment" (下载) | disp-ext-type
