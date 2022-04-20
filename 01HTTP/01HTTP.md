@@ -613,52 +613,69 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 * Host 头部
 	* Host = uri-host[":"port]
 	* 必须且唯一且合法，否则返回 400
-* Host 头部与信息的路由
+* Host 头部与信息的路由 (NGINX 为例)
 
 	![16-1](16-1.jpg)
 
-## 17 代理服务器转发信息时的相关头部
+## 17 代理服务器转发消息时的头部
 
-* 问题：如果传递 IP 地址
+- X-Forwarded-For
+ 
+	![17-1](17-1.png)
 
-		![17-1](17-1.png)
-
-* 消息的转发
-	* Max-Forwards 头部
-		* 限制转发次数
-	* Via 头部
-		* 经过的代理服务器的名称和版本
-
-			![17-2](17-2.png)
-
-	* Cache-Control:no-transform
-		* 进制代理服务器修改响应的包体
+	- Max-Forwards 头部：最多代理数
+	- Via 头部：经过了哪些代理服务器
+	- Cache-Control:no-transform: 禁止代理服务器修改相应包体
 
 ## 18 请求与响应的上下文
 
-* 上下文
-	* 请求从哪里来，或者请求或响应希望对后序的响应和请求有哪些影响
-* 请求的上下文: User-Agent
-	* 指明客户端的类型信息，服务器可以依据此对资源的表述做抉择
+- 上下文
+	- 请求从哪里来
+	- 想对后续的请求和相应产生哪些影响
+- 请求的上下文
+	- User-Agent:
+		- 指明客户端的类型信息
+	- Referer
+		- 浏览器对来自某一页面的请求自动添加的头部
+			- 比如从谷歌搜索转过来的请求
+			- 比如 css 和 js 由某个请求发出
+		- 用于统计分析、缓存优化、防盗链等功能
+	- FROM
+		- 用于网络爬虫
+- 相应的上下文
+	- Server
+		- 服务器用的软件的信息
+	- Allow
+		- 只允许使用哪些方法
+	- Accept-Ranges
+		- 告诉客户端，服务器上该资源是否允许 range 请求
 
-		![18-1](18-1.png)
+## 19 内容协商与资源表述
 
-* 请求的上下文: Referer
-	* 浏览器对来自某一页面的请求自动添加的头部
+- 同一个 URL 可以得到不同的资源，具体内容需要协商
+	![19-1](19-1.png)
+- 内容协商的两种方式
+	- Proactive 主动式内容协商
+		- 客户端先表明需要的表述方式
 
-		![18-2](18-2.png)
+			![19-2](19-2.png)
 
-		![18-3](18-3.png)
+	- Reactive 响应式内容协商
+		- 多种表示方式都发给客户端，再由客户端发请求
 
-* 请求的上下文: From
-	* From = mailbox
-* 响应的上下文: Server
-	* 指明服务器上所有软件的信息，用于帮助客户端定位问题或者统计数据
-	* 例如：
-		* Server: nginx
-		* Server: openresty/1.13.6
-* 响应的上下文: Allow 与 Accept-Ranges
-	* Allow: 告诉客户端，服务器上该 URI 对应的资源允许哪些方法的执行
-	* Accept-Ranges: 告诉客户端服务器上该资源是否允许 range 请求
+			![19-2](19-2.png)
 
-	
+		- 标准不统一，很少用
+- 常见的协商要素
+	- 质量因子 q：内容的质量、可接受类型的优先级
+	- 媒体资源的 MIME 类型及质量因子
+	- 字符编码
+	- 内容编码
+		- Accept-Encoding: gzip, deflate, br
+	- 表示语言
+	- internationalization (i18n)
+	- localization (l10n)
+- 资源表述的元数据头部
+	- content-type
+	- content-encoding
+	- Content-Language
