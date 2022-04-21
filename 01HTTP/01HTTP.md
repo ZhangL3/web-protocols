@@ -725,3 +725,34 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 	- MIME (Multipurpose Internet Mail Extensions)
 - Content-Disposition
 	- disposition-type = "inline" (行内显示) | "attachment" (下载) | disp-ext-type
+
+## 22 HTTP form 表单提交时的协议格式
+
+- HTML FORM 表单
+	- HTML: 结构化的标记语言（非编程语言）
+		- 不提供交互
+		- 可别浏览器渲染
+	- FORM 表单
+		- HTML 中的元素，提供了交互控制元件用来向服务器通过 HTTP 协议提交信息，常见控件有：
+		- Text Input Controls
+		- Checkboxes Controls
+		- Radio Box Controls
+		- Select Box Controls
+		- File Select boxes
+		- Cilckable Buttons
+		- ***Submit*** and Reset Button
+- HTML FORM 表单提交时的关键属性
+	- action: 提交时发起 HTTP 请求的 URI
+	- method:
+		- GET: 通过 URI，将表单数据以 URI 参数的方式提交
+			- 没有包体
+		- POST：将表单数据放在请求包体中提交
+	- enctype: 在 POST 方法下，对表单内容在请求包体中的编码方式
+		- application/x-www-form-urlencoded
+			- key1=value1&key2=value2
+		- multipart/form-data
+			- 方便传输二进制文件 type="file"
+			- Content-type 头部指明这是一个多表述包体
+				- 每一个部分都是一个独立的资源表述
+				- Boundary 分割符的格式
+			- Multipart 包体格式
