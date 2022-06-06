@@ -756,3 +756,42 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 				- 每一个部分都是一个独立的资源表述
 				- Boundary 分割符的格式
 			- Multipart 包体格式
+- 断点续传与多线程下载是如何做到的？
+	- 步骤
+		- 客户端明确任务：从哪开始下载
+			- 本地是否已经有部分文件
+				- 是否在服务端发生了改变
+			- 使用几个线程并发下载
+		- 下载文件的指定部分内容
+		- 现在完毕后拼装成统一的文件
+	- HTTP Range 规范
+		- 基于客户端请求发送响应包体，客户端自行组装
+			- 断点续传
+			- 多线程
+			- 视频拖拽
+		- HEADE: RAccept-Ranges
+		 - Accetp-Ranges=acceptable-ranges
+			- Accept-Ranges: bytes
+			- Accept-Ranges: none
+		- Range 请求范围的单位
+			- curl protocol.taohui.tech/app/letter.txt -H 'Range:bytes=0-6'
+		- Range 条件请求
+			- 先检查已下载的部分是否被修改了
+				- 常与 IF-Unmodified-Since 或者 If-Match 头部共同使用
+
+				![23-1-If-Match](23-1-If-Match.png)
+
+			- If-Range = entity-tag / HTTP-date
+				- 可以使用 Etag 或者 Last-Modified
+		- 服务器响应
+			- 206 Particial Content
+				- Content-Range 头部
+					- Conttent-Range: bytes 42-1233/1234 
+					- Conttent-Range: bytes 42-1233/* 
+			- 416 Range Not Satisfiable
+			- 200 OK
+				- 服务器不支持 Range 请求，返回全部
+		- 多重范围与 multipart
+
+				![23-2-multipart](23-2-multipart.png)
+			
