@@ -794,4 +794,33 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 		- 多重范围与 multipart
 
 				![23-2-multipart](23-2-multipart.png)
-			
+
+- Cookie 的格式与约束
+	- Cookie 是什么
+		- RFC6265 HTTP State Management Mechanism
+		- 保存在客户端、由浏览器维护、表示应用的状态的 HTTP 头部
+			- 存放在内存或者磁盘中
+			- 服务器端生成 Cookie 在响应中通过 Set-Cookie 头部告知客户端
+			- 客户端得到 Cookie 后，后序请求都会自动将 Cookie 头部携带至请求中
+ 
+			![24-1-cookie](24-1-cookie.png)
+	
+	- Cookie 与 Set-Cookie 头部的定义
+		- Cookie 头部可以存放多个 name/value 对
+		- Set-Cookie 头部只能传递一个 name/value 对，响应中可以含多个头部	
+	- Set-Cookie 中描述 coolie-pair 的属性
+		- Expire=
+			- 有效期截至日期
+		- Max-Age=
+			- 有效时间多少秒，优先于截止日期
+		- Domain=
+		- Path=
+		- Secure
+		- HttpOnly
+
+		![24-2-set-cookie](24-2-set-cookie.png)
+- Cookie 使用的限制
+	- RFC 规范
+		- 每条 Cookie 的长度至少能达到 4KB
+		- 每个域名下至少支持 50 个 Cookie
+	- 代理服务器传递 Cookie 时会有限制
