@@ -819,8 +819,33 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 		- HttpOnly
 
 		![24-2-set-cookie](24-2-set-cookie.png)
+
 	- Cookie 使用的限制
 		- RFC 规范
 			- 每条 Cookie 的长度至少能达到 4KB
 			- 每个域名下至少支持 50 个 Cookie
 		- 代理服务器传递 Cookie 时会有限制
+- Session 及第三方 Cookie 的工作原理
+	- 登录场景下 Cookie 与 Session 的常见方法
+
+	![25-1-session-cookie](25-1-session-cookie.png)
+
+	- 无状态的 REST 架构 VS 转台管理
+		- 应用状态与资源状态
+			- 应用状态：应由客户端管理，不应由服务器管理
+				- 如浏览器目前在哪一页
+				- ***REST 架构要求服务器不应该保存应用状态***
+					- 影响力架构的可伸缩性
+			- 资源状态
+				- 如数据库中存放的数据状态，例如用户的登录信息
+		- HTTP 请求的状态
+			- 有状态的请求：服务器端保存请求的相关信息，每个请求可以使用以前保留的请求的相关信息
+				- 服务器 session 机制使服务器保存请求的相关信息
+				- cookie 使请求可以写道查询信息，与 session 配合完成由状态的请求
+			- 无状态的请求：服务器能够处理的所有信息都来自当前请求所携带的信息
+				- 服务器不会保存 session 信息
+				- 亲求可以通过 cookie 携带
+	- 第三方 Cookie
+		
+	![24-3-third-party-cookie](24-3-third-party-cookie.png)
+	![24-4-third-party-cookie-exp](24-4-third-party-cookie-exp.png)
