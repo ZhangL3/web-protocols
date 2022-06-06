@@ -819,8 +819,8 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 		- HttpOnly
 
 		![24-2-set-cookie](24-2-set-cookie.png)
-- Cookie 使用的限制
-	- RFC 规范
-		- 每条 Cookie 的长度至少能达到 4KB
-		- 每个域名下至少支持 50 个 Cookie
-	- 代理服务器传递 Cookie 时会有限制
+	- Cookie 使用的限制
+		- RFC 规范
+			- 每条 Cookie 的长度至少能达到 4KB
+			- 每个域名下至少支持 50 个 Cookie
+		- 代理服务器传递 Cookie 时会有限制
