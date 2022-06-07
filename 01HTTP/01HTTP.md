@@ -849,3 +849,30 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 		
 	![24-3-third-party-cookie](24-3-third-party-cookie.png)
 	![24-4-third-party-cookie-exp](24-4-third-party-cookie-exp.png)
+
+- 浏览器的同源策略
+	- 为什么需要同源策略
+		- 同一个浏览器发出的请求，未必都是用户自愿发出的请求
+			- 站点 B 可以得到用户在站点 A 的 session，伪装成用户向站点 A 发送请求
+			- 站点 B 可以访问到 A 的 DOM 结构
+	- 什么时同源策略
+		- 限制了从同一个源加载的文档或者脚本如何与来自另一个源的资源进行交互
+			- 协议、主机、端口必须相同
+	- 安全性与可用性需要一个平衡点
+		- 可用性：HTML 的创作者决定跨域请求是否对本站点安全
+			- \<script>\<img>\<iframe>\<link>\<video>\<audio> 带有 src 属性可以跨域访问
+			- 允许跨域写操作：例如表单提交或者重定向请求
+				- CSRF 安全性问题
+		- 安全性：浏览器需要防止站点 A 的脚本向站点 B 发起危险动作
+			- Cookie, LocalStorage 和 indexDB 无法读取
+			- DOM 无法获取
+			- AJAX 请求不能发送
+	- 跨站请求伪造攻击
+		- Cross-Site Request Forgery (CSRF)
+
+		![26-1-csrf](26-1-csrf.png)
+
+		- ohter attack
+
+		![26-2-ohter-attack](26-2-ohter-attack.png)
+
