@@ -876,3 +876,19 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 
 		![26-2-ohter-attack](26-2-ohter-attack.png)
 
+- CORS: Cross-Origin Resource Sharing
+	- 浏览器同源策略下的跨域访问解决方案
+		- 站点 A 必须在 HTTP 响应中显示的告知浏览器：站点 B 时被允许的
+			- 访问站点 A 的请求，浏览器应告知请求来自站点 B
+			- 站点 A 的相应中，应明确哪些跨域请求时允许的
+	- 策略 1：何为简单请求
+		- GET/HEAD/POST 方法之一
+		- 仅能使用 CORS 安全的头部: Accept, Accept-Language, Content-Language, Content-Type
+		- Content-Type 值只能是: text/plain, multipart/form-data, application/x-www-form-urlencoded 三者其中之一
+
+		![27-1-simple](27-1-simple.png)
+
+	- 策略 2：简单请求以为的其他请求
+		- 预检请求，先发 option
+
+		![27-2-complated](27-2-complated.png)
