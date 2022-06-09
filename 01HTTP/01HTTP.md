@@ -892,3 +892,52 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 		- 预检请求，先发 option
 
 		![27-2-complated](27-2-complated.png)
+
+- 条件请求的作用
+	- 资源 URI 与资源表述 Representation
+		- 资源 R 可被定义为随时间变化的函数 MR(t)
+			- 静态资源
+			- 动态资源
+	- 优点
+		- 提供了无需认为设定类型或者实现方式的情况下，同一资源多种不同来源的信息 （比如获取天气，同一 url 获取不同时刻的信息）
+		- 基于请求特性进行内容协商，使资源的渲染延迟绑定（比如语言设定）
+		- 允许表示概念而不是具体的 Representation, 故资源变化时不用修改所有连接
+	- Precondition 条件请求
+		- 目的
+			- 由客户端携带条件判断信息，而服务器预执行条件验证过程成功后，在返回资源的表述
+		- 常见引用场景
+			- 使缓存给的更新更有效（如 304 响应码使服务器不用传递包体）
+			- 断点续传时对之前内容的验证
+			- 当多个客户端并行修改同一资源时，防止某一客户端的更新被错误抛弃
+		- 强验证器与弱验证器的概念
+			- 验证器 validator： 根据客户端请求中携带的相关头部，以继服务器资源的信息，执行两端的资源验证
+				- 强验证器：服务器上的资源表述只要有变动（例如版本更新或者元数据更新），那么以旧的验证头部访问一定会导致验证不过
+				- 弱验证其：服务器剩的资源变动时，允许一定程度上仍然可以验证通过（例如一小段时间内扔烟允许缓存有效）
+		- 验证器相应头部
+			- Etag
+				- 给出当前资源表述的标签
+				- 例如：
+					- 强验证器 ETag: "xyzzy"
+					- 弱验证器 ETag: W/"xyzzy"
+			- Last-Monified
+			 	- 定义： Last-Modified = HTTP-date
+				- 表示 ***对应资源表述*** 的上次修改的时间
+				- 对比 Date 头部： Date = HTTP-date
+					- 表示相应包体生成的使时间
+					- Last-Modified 不能晚于 Date 的值
+		- 客户端条件请求头部
+			- If-Match
+			- If-None-Match
+			- If-Modified-Since
+			- If-Unmodified-Since
+			- If-Range
+		- 应用场景
+			- 缓存更新
+				- 首次缓存
+
+				![28-1-first-cache](28-1-first-cache.png)
+
+				- 基于过期缓存发起条件请求
+
+				![28-2-last-modified](28-2-last-modified.png)
+
