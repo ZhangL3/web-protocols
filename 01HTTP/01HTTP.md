@@ -941,3 +941,37 @@ HTTP-message = start-line *(header-filed CRLF) CRLF [ message-body ]
 
 				![28-2-last-modified](28-2-last-modified.png)
 
+			- 曾量更新
+				- 当服务器支持 Range 服务时，连接意外中断时已接受到部分数据
+
+				![28-3-increase-update](28-3-increase-update.png)
+
+				- source not changed
+
+				![28-3-not-modifeid](28-3-not-modifeid.png)
+
+				- source changed
+
+				![28-4-changed](28-4-changed.png)
+
+				- srouce changed, response changed source directly
+
+				![28-5-changed-one-request](28-5-changed-one-request.png)
+
+			- 更新丢失问题
+
+				![28-6-race-condition](28-6-race-condition.png)
+
+			- 乐观锁
+
+				![28-7-optimistic-concurrency-control-1](28-7-optimistic-concurrency-control-1.png)
+				
+			- 首次上传
+				![28-8-optimistic-concurrency-control-2](28-8-optimistic-concurrency-control-2.png)
+
+		- Nginx 处理条件请求
+
+			![28-9-nginx](28-9-nginx.png)
+
+
+
